@@ -1,0 +1,12 @@
+<?php 
+
+// Home page
+// header
+//  - menu
+// get sections list from customizer
+// foreach over the list
+// print out the section according to a section template_part
+// footer
+//  - widget area
+
+// Other pages like the we have now
