@@ -1,92 +1,110 @@
 <?php
 /**
- * HEADER
+ * The header for our theme.
+ *
+ * Displays all of the <head> section and everything up till <div id="content">
+ *
+ * @package Pique
  */
+
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
-	<title><?php wp_title( '|', true, 'right' ); ?></title>
-
-	<link rel="profile" href="http://gmpg.org/xfn/11">
-	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="<?php echo get_bloginfo_rss( 'rss2_url' ); ?>" />
-	
-	<?php wp_head(); ?>
+<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
-	<?php do_action( 'before' ); ?>
+<div id="page" class="hfeed site">
 
-<header id="masthead" class="site-header" role="banner">
-<?php // substitute the class "container-fluid" below if you want a wider content area ?>
-	<div class="container">
-		<div class="row">
-			<div class="site-header-inner col-sm-12">
+	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'pique' ); ?></a>
 
-				<?php $header_image = get_header_image();
-				if ( ! empty( $header_image ) ) { ?>
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-						<img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt="">
-					</a>
-				<?php } // end if ( ! empty( $header_image ) ) ?>
+	<header id="masthead" class="site-header" role="banner">
 
+		<?php // Let's show a header image if we aren't on the front page and a header has been set
+		if ( ! pique_is_frontpage() AND get_header_image() ) : ?>
+			<a class="pique-header" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 
-				<div class="site-branding">
-					<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-					<p class="lead"><?php bloginfo( 'description' ); ?></p>
-				</div>
+			<?php // If the post uses a Featured Image, let's show that
+			if ( is_singular() && has_post_thumbnail() ) :
+				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) );
+			else : // Otherwise, let's just show the header image
+			?>
+				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); ?>">
+			<?php endif; // End featured image check. ?>
+			</a>
+		<?php endif; // End header image check. ?>
+<?php /**/ 
+		// This needs to be a custom made solution where the ?>
+		<div class="site-branding">
+			<?php cultiv8_the_site_logo(); ?>
+			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
+			<p class="site-description"><?php bloginfo( 'description' ); ?></p>
+		</div><!-- .site-branding -->
+<?php /* */ ?>
+		<?php if ( pique_is_frontpage() AND get_theme_mod( 'pique_menu' ) ) : ?>
 
+			<?php
+			// Get each of our panels and output a link to that section ID on the page
+			foreach ( range( 1, 8 ) as $panel ) :
+				if ( get_theme_mod( 'pique_panel' . $panel ) ) :
+					$post = get_post( get_theme_mod( 'pique_panel' . $panel ) );
+					setup_postdata( $post );
+					// Just in case the user didn't set a title for the page, we're going to generate one from the slug
+					if ( '' === get_the_title() ) :
+						$title = str_replace( '-', ' ', $post->post_name );
+					else :
+						$title = get_the_title();
+					endif;
+					$panel_links[] = '<li><a href="#post-' . get_the_ID() . '">' . $title . '</a></li>';
+					wp_reset_postdata();
+				endif;
+			endforeach;
+
+			// Output our menu only if we actually have menu items
+			if ( isset( $panel_links ) ) : ?>
+			<div id="site-navigation-wrapper">
+				<nav id="site-navigation" class="main-navigation" role="navigation">
+					<ul id="primary-menu" class="menu nav-menu">
+						<?php
+						foreach ( $panel_links as $key => $link ) :
+							// Output menu link
+							echo wp_kses( $link, array(
+												'a' => array(
+															'href' => array(),
+															'title' => array(),
+														),
+												'li' => array(),
+												)
+							);
+						endforeach;
+						?>
+						<li id="more-menu" class="menu-item menu-item-has-children"><a href="#"><span class="screen-reader-text">More</span></a><ul class="sub-menu"></ul></li>
+					</ul>
+				</nav><!-- #site-navigation -->
 			</div>
+			<?php endif; ?>
+
+		<?php elseif ( has_nav_menu( 'primary' ) ) : ?>
+		<div id="site-navigation-wrapper">
+			<nav id="site-navigation" class="main-navigation" role="navigation">
+				<?php
+					wp_nav_menu( array(
+						'theme_location'  => 'primary',
+						'menu_id'         => 'primary-menu',
+						'fallback_cb'     => 'wp_page_menu',
+						'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+						'walker'          => new Pique_Menu(),
+					) );
+				?>
+			</nav><!-- #site-navigation -->
 		</div>
-	</div><!-- .container -->
-</header><!-- #masthead -->
+		<?php endif; ?>
 
-<nav class="site-navigation">
-<?php // substitute the class "container-fluid" below if you want a wider content area ?>
-	<div class="container">
-		<div class="row">
-			<div class="site-navigation-inner col-sm-12">
-				<div class="navbar navbar-default">
-					<div class="navbar-header">
-						<!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
-						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-							<span class="sr-only"><?php _e('Toggle navigation','_tk') ?> </span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-	
-						<!-- Your site title as branding in the menu -->
-						<a class="navbar-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
-					</div>
+	</header><!-- #masthead -->
 
-					<!-- The WordPress Menu goes here -->
-					<?php wp_nav_menu(
-						array(
-							'theme_location' 	=> 'primary',
-							'depth'             => 2,
-							'container'         => 'div',
-							'container_class'   => 'collapse navbar-collapse',
-							'menu_class' 		=> 'nav navbar-nav',
-							'fallback_cb' 		=> 'wp_bootstrap_navwalker::fallback',
-							'menu_id'			=> 'main-menu',
-							'walker' 			=> new wp_bootstrap_navwalker()
-						)
-					); ?>
-
-				</div><!-- .navbar -->
-			</div>
-		</div>
-	</div><!-- .container -->
-</nav><!-- .site-navigation -->
-
-<div class="main-content">
-<?php // substitute the class "container-fluid" below if you want a wider content area ?>
-	<div class="container">
-		<div class="row">
-			<div id="content" class="main-content-inner col-sm-12 col-md-8">
-
+	<div id="content" class="site-content">

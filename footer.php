@@ -2,33 +2,31 @@
 /**
  * The template for displaying the footer.
  *
- * Contains the closing of the id=main div and all content after
+ * Contains the closing of the #content div and all content after
  *
- * @package _tk
+ * @package Cultiv8
  */
+
 ?>
-			</div><!-- close .*-inner (main-content or sidebar, depending if sidebar is used) -->
-		</div><!-- close .row -->
-	</div><!-- close .container -->
-</div><!-- close .main-content -->
 
-<footer id="colophon" class="site-footer" role="contentinfo">
-<?php // substitute the class "container-fluid" below if you want a wider content area ?>
-	<div class="container">
-		<div class="row">
-			<div class="site-footer-inner col-sm-12">
+	</div><!-- #content -->
 
-				<div class="site-info">
-					<?php do_action( '_tk_credits' ); ?>
-					<a href="http://wordpress.org/" title="<?php esc_attr_e( 'A Semantic Personal Publishing Platform', '_tk' ); ?>" rel="generator"><?php printf( __( 'Proudly powered by %s', '_tk' ), 'WordPress' ); ?></a>
-					<span class="sep"> | </span>
-                    <a class="credits" href="http://themekraft.com/" target="_blank" title="Themes and Plugins developed by Themekraft" alt="Themes and Plugins developed by Themekraft"><?php _e('Themes and Plugins developed by Themekraft.','_tk') ?> </a>
-				</div><!-- close .site-info -->
+	<footer id="colophon" class="site-footer" role="contentinfo" style="background-image: url('<?php header_image(); ?>')">
 
-			</div>
-		</div>
-	</div><!-- close .container -->
-</footer><!-- close #colophon -->
+		<?php get_sidebar( 'footer' ); ?>
+
+		<?php
+		if ( has_nav_menu( 'secondary' ) ) :
+			wp_nav_menu( array( 'theme_location' => 'secondary', 'depth' => 1, 'container_class' => 'secondary-links', ) );
+		endif;
+		?>
+
+		<div class="site-info">
+			<?php echo sprintf( __( '&copy; Copyright %d %s', 'harvest' ), date('Y'), get_bloginfo( 'name' ) ); ?>
+    </div><!-- .site-info -->
+
+	</footer><!-- #colophon -->
+</div><!-- #page -->
 
 <?php wp_footer(); ?>
 
