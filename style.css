@@ -6,6 +6,78 @@ Template: pique
 */
 
 
+/* Font Adjustments */
+.highlight{
+	color: #83b6cc;
+}
+.pique-panel-content .darkfont {
+	color: #726b60;
+}
+.pique-panel-content .lightfont {
+	color: fcfbf9;
+}
+.bigfont{
+	font-size: 2em;
+}
+.medfont{
+	font-size: 1.5em;
+}
+.midfont{
+	font-size: 1.1em;
+}
+.smfont{
+	font-size: 0.7em;
+}
+.sans {
+	font-family: Karla, Arial, sans-serif;
+}
+.entry-content p.first{
+	font-size: 1.1em;
+}
+
+.pique-panel-autoheight {
+	min-height: auto !important;
+}
+
+.flush-bottom ~ * {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.flush-bottom {
+  margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.textcenter{
+	text-align: center;
+}
+
+.flex-container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	align-contents: space-around;
+}
+
+.flex-container > .flex-item {
+	flex: 1;
+}
+
+.box {
+	border-radius: 5px;
+	padding: 10px;
+	height: auto;
+	min-height: 1px;
+}
+.box-dark {
+	background: rgba(0,0,0,0.2);
+}
+.box-light {
+	background: rgba(255,255,255,0.2);
+}
+
+/* Fixed ratio boxes*/
 .cultiv8-fixedratio {
 	position: relative;
 	overflow: hidden;
@@ -53,6 +125,12 @@ h3.cultiv8-ctc-position {
 	text-align: center;
 }
 
+.pique-frontpage .pique-panel-content .entry-content{
+	max-width: 80%;
+}
+#pique-hero .pique-panel-content .entry-content{
+	max-width: none;
+}
 @media (min-width: 768px) {
 	.cultiv8-grid-33 {
 		float: left;

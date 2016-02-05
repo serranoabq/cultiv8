@@ -72,7 +72,27 @@ function cultiv8_customize_register( $wp_customize ) {
 		'description' => _x( 'Logo used in RSS feed. Sometimes a white + transparent logo does not show well in RSS readers. Use this to display a different logo than your site logo.', 'RSS feed logo option description', 'cultiv8' ),
 	) );
 	
-	
+	// Panel options
+	for($i = 1; $i <= 8; $i++ ){
+		cultiv8_customize_createSetting( $wp_customize, array(
+			'id' => 'cultiv8_panel'. $i .'_hidetitle',
+			'label' => _x( 'Hide Title', 'Customizer setting', 'cultiv8' ),
+			'type' => 'checkbox',
+			'default' => false,
+			'section' => 'pique_panel' . $i,
+			'transport' => 'postMessage',
+			'description' => _x( 'Check to hide the title in this section', 'cultiv8' ),
+		) );
+		cultiv8_customize_createSetting( $wp_customize, array(
+			'id' => 'cultiv8_panel' . $i. '_height',
+			'label' => _x( 'Auto height', 'Customizer setting', 'cultiv8' ),
+			'type' => 'checkbox',
+			'default' => false,
+			'section' => 'pique_panel' . $i,
+			'transport' => 'postMessage',
+			'description' => _x( 'Check to adjust panel height to content', 'cultiv8' ),
+		) );
+	}
 }
 add_action( 'customize_register', 'cultiv8_customize_register', 11 );
  

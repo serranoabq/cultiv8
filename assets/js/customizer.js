@@ -18,5 +18,33 @@
 		} );
 	} );
 	
-
+	// Additional Panel options
+	for( var i = 1; i <= 8; i++ ){
+		var ist = i.toString();
+		var panelctrl = 'cultiv8_panel' + ist;
+		var panel = '.pique-panel' + ist;
+		
+		( function( ctrl, panel ) {
+			wp.customize( ctrl + '_hidetitle', function( value ) {
+				value.bind( function( to ) {
+					if( to ) {
+						$( panel + ' .entry-header h2').css( 'display', 'none');
+					} else {
+						$( panel + ' .entry-header h2').css( 'display', '');
+					}
+				} );
+			} );
+			
+			wp.customize( ctrl + '_height', function( value ) {
+				value.bind( function( to ) {
+					if( to ) {
+						$( panel ).css( 'min-height', 'auto');
+					} else {
+						$( panel ).css( 'min-height', '60vh');
+					}
+				} );
+			} );
+		} ) ( panelctrl, panel );
+	}
+	
 } )( jQuery );

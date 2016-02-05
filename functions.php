@@ -32,7 +32,7 @@ function cultiv8_styles() {
 	
 	cultiv8_deregister_scripts();
 	
-}
+} // cultiv8 styles
 
 
 // Handle scripts that we don't want loaded all the time
@@ -44,10 +44,22 @@ function cultiv8_deregister_scripts() {
 			wp_deregister_style( 'contact-form-7' );
 	}
 
+} // cultiv8 scripts
+
+// Helper function for theme options
+function cultiv8_option( $option, $default = false ) {
+	if( class_exists( 'CTC_Extender' )  && ctcex_has_option( $option ) )
+		return ctcex_get_option( $option, $default );
+	
+	return get_theme_mod( $option, $default );
 }
 
-/// Load Feed support
+
+/// Load image helpers
 require  get_stylesheet_directory() . '/inc/images.php' ;
+
+/// Load display helper
+require  get_stylesheet_directory() . '/inc/display.php' ;
 
 /// Load CTC support file.
 require  get_stylesheet_directory() . '/inc/ctc-support.php' ;

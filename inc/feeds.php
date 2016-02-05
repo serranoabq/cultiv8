@@ -1,7 +1,7 @@
 <?php
 	// HELPER: Feed
 	
-	// iTunes enhancements
+	// RSS feed enhancements
 
 function cultiv8_podcast_description(){
 	global $wp_query;
@@ -9,12 +9,11 @@ function cultiv8_podcast_description(){
 	$site_desc = bloginfo( 'description' );
 	$pod_desc = get_theme_mod( 'cultiv8_podcast_desc', '' );
 	$term_desc = '';
-	if( is_user_logged_in() ){
 	if( isset( $query[ 'ctc_sermon_topic' ] )){
 		$term = get_term_by( 'slug', $query[ 'ctc_sermon_topic' ], 'ctc_sermon_topic' );
 		$term_desc = $term->description;
 	}
-	}
+	
 	if( !empty($term_desc) ) return $term_desc;
 	if( !empty($pod_desc) ) return $pod_desc;
 	if( !empty($site_desc) ) return $site_desc;
@@ -30,15 +29,18 @@ function cultiv8_itunes_namespace() {
 add_filter('rss2_head', 'cultiv8_itunes_head');
 function cultiv8_itunes_head() {
 		$desc = cultiv8_podcast_description();
-if( cultiv8_option( 'podcast_author' ) ) 
+	if( cultiv8_option( 'podcast_author' ) ) {
 			echo '
 	<itunes:author>'. cultiv8_option( 'podcast_author' ) . '</itunes:author>';
-	if( $desc ) 
+	}
+	if( $desc ) {
 			echo '
 	<itunes:summary>'. $desc . '</itunes:summary>';
-	if( cultiv8_option('podcast_image') )
+	}
+	if( cultiv8_option('podcast_image') ) {
 			echo '
 	<itunes:image href="'. cultiv8_option('podcast_image' ) . '"/>';
+	}
 }
 
 
@@ -57,10 +59,11 @@ function cultiv8_feed_request( $qv ) {
 	if( ! empty( $topic_option ) && ! isset( $qv['ctc_sermon_topic' ] ) ) {
 		// Set the first location as the default
 		$locs = get_terms('ctc_sermon_topic', array( 'order_by' => 'id', 'order' => 'DESC') );
-		$min_loc_slug = $locs[0]->slug;
+		$def_loc = array_shift( $locs );
+		$def_loc = $def_loc->slug;
 		
-		if( ! empty( $min_loc_slug ) )
-			$qv[ 'ctc_sermon_topic' ] = $min_loc_slug;
+		if( ! empty( $def_loc ) )
+			$qv[ 'ctc_sermon_topic' ] = $def_loc;
 	}
 	
 	return $qv;
@@ -101,4 +104,30 @@ function cultiv8_rss_feed_add_icon($text) {
 	</image>
 <?php 
 } 
+
+// Fix feed title
+add_filter('get_wp_title_rss', 'cultiv8_rss_title', 10, 2);
+function cultiv8_rss_title( $title, $dep ){
+	global $wp_query;
+	$query = $wp_query->query;
+	$title = get_bloginfo( 'name' );
+	
+	// If a topic (aka Location) is set fix the title appropriately
+	if( isset( $query[ 'ctc_sermon_topic' ] ) ){
+		// Since we've filtered the feed such that the first location is the 'default', we
+		// only add the location to the title if it's not the default one
+		$locs = get_terms('ctc_sermon_topic', array( 'order_by' => 'id', 'order' => 'DESC') );
+		$def_loc = array_shift( $locs );
+		$def_loc = $def_loc->slug;
+		$term = get_term_by( 'slug', $query[ 'ctc_sermon_topic' ], 'ctc_sermon_topic' );
+		if( $term && $term->slug != $def_loc ){
+			$title .= ' ' . $term->name;
+			// This corrects duplication of a name if the campus names have the name of the church 
+			// ( e.g., "Crossroads" is the church and the campus is "Crossroads Springfield", which would result in "Crossroads Crossroads Springfield")
+			$title = implode( ' ', array_unique( explode( ' ', $title ) ) );
+		}
+	}
+	
+	return $title;
+}
 
