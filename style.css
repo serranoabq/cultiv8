@@ -57,7 +57,8 @@ Template: pique
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	align-contents: space-around;
+	align-content: space-around;
+	flex-flow: column;
 }
 
 .flex-container > .flex-item {
@@ -125,13 +126,51 @@ h3.cultiv8-ctc-position {
 	text-align: center;
 }
 
+.pique-panel-bakcground {
+	background-size: cover;
+}
+
 .pique-frontpage .pique-panel-content .entry-content{
 	max-width: 80%;
 }
 #pique-hero .pique-panel-content .entry-content{
 	max-width: none;
 }
+
+/* CTCEX Sermon */
+.ctcex-sermon-container,
+.ctcex-events-container{
+	display: flex !important;
+	align-content: space-around;
+	justify-content: space-around;
+	flex-flow: column wrap;
+}
+.ctcex-events-container .ctcex-event-media,
+.ctcex-events-container .ctcex-event-details,
+.ctcex-sermon-container .ctcex-sermon-media,
+.ctcex-sermon-container .ctcex-sermon-details{
+	padding-left: 20px;
+	flex: 1;
+	max-width:100%;
+}
+.ctcex-events-container .ctcex-event-media,
+.ctcex-sermon-container .ctcex-sermon-media{
+	flex: 2;
+	padding: 10px;
+	border-radius: 5px;
+	background: rgba(255,255,255,0.5);
+}
+
+
 @media (min-width: 768px) {
+	.ctcex-sermon-container,
+	.ctcex-events-container,
+	.flex-container {
+		flex-flow: row wrap;
+	}
+		flex-flow: row wrap;
+	}
+	
 	.cultiv8-grid-33 {
 		float: left;
 		width: 30%;

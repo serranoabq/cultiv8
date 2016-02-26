@@ -131,3 +131,68 @@ function cultiv8_rss_title( $title, $dep ){
 	return $title;
 }
 
+
+/* 
+	CTC uses the WP function do_enclose to make proper enclosures for the audio in a post. That method does an http fetch to
+	get the audio length. If the fetch fails the enclosure isn't added. While the fetch is necessary if the file is remote, 
+	it isn't needed for files in the uploads folder, which WP can process without the HTTP fetch. This method now does the 
+	handling of the enclosure data using WP methods for local files and then falls back to the normal do_enclose method if 
+	it's a remote file. If you don't need it, comment the next function out. 
+	
+*/
+remove_action( 'save_post', 'ctc_sermon_save_audio_enclosure', 11 ); // Replace the built-in CTC enclosure function which is failing on my server
+add_action( 'save_post', 'cultiv8_sermon_save_audio_enclosure', 11, 2 ); // after 'save_post' saves meta fields on 10
+function cultiv8_sermon_save_audio_enclosure( $post_id, $post ) {
+
+	// Stop if no post, auto-save (meta not submitted) or user lacks permission
+	if ( 'ctc_sermon' != $post->post_type ) {
+		return;
+  }
+	$post_type = get_post_type_object( $post->post_type );
+	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( $post_type->cap->edit_post, $post_id ) ) {
+		return false;
+	}
+
+	// Stop if PowerPress plugin is active
+	// Solves conflict regarding enclosure field: http://wordpress.org/support/topic/breaks-blubrry-powerpress-plugin?replies=6
+	if ( defined( 'POWERPRESS_VERSION' ) ) {
+		return false;
+	}
+
+	// Get audio URL
+	$audio = get_post_meta( $post_id , '_ctc_sermon_audio' , true );
+
+	// The built-in do_enclose method goes a roundabout way of getting the file 
+	// length, which involves an http fetch to get the right length. On some server 
+	// configurations if the fetch fails the enclosure isn't added. While the fetch 
+	// is necessary if the file is remote, it's frustrating if the file is on the 
+	// same server, where WP can get all the information without the http fetch. 
+	// This method now does the handling of the enclosure data using WP methods if the 
+	// file is local and then falls back to the normal do_enclose method if it's 
+	// a remote file
+	
+	// Populate enclosure field with URL, length and format, if valid URL found
+	$uploads = wp_upload_dir();
+	// A local file is assume to be one living in the uploads directory
+	$is_local = stripos( $audio, $uploads[ 'baseurl' ] ); 
+	if( ! ( false === $is_local)  ) {
+		// Get the path to the file
+		$audio_src = str_replace( $uploads['baseurl'], $uploads['basedir'], $audio );
+		// Get meta data
+		$metadata =  wp_read_audio_metadata( $audio_src );
+		if( $metadata ){
+			// Make sure we got metadata and read the mime_type 
+			// and filesize values which are needed for the enclosure
+			$mime = $metadata[ 'mime_type' ];
+			$length = $metadata[ 'filesize' ];
+			if( $mime ) {
+				// We've got data, add enclosure meta
+				update_post_meta( $post_id, 'enclosure', "$audio\n$length\n$mime\n" );
+			}
+		}
+	} else {
+		// Leave do_enclose for remote files
+		do_enclose( $audio, $post_id ); 
+	}
+}
+/* */
