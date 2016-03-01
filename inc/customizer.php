@@ -92,6 +92,15 @@ function cultiv8_customize_register( $wp_customize ) {
 			'transport' => 'postMessage',
 			'description' => _x( 'Check to adjust panel height to content', 'cultiv8' ),
 		) );
+		cultiv8_customize_createSetting( $wp_customize, array(
+			'id' => 'cultiv8_panel' . $i. '_hideinmenu',
+			'label' => _x( 'Hide from Menu', 'Customizer setting', 'cultiv8' ),
+			'type' => 'checkbox',
+			'default' => false,
+			'section' => 'pique_panel' . $i,
+			//'transport' => 'postMessage',
+			'description' => _x( 'Check to hide this pane from the top menu if the <code>Add an anchor menu to the front page</code> option is selected.', 'cultiv8' ),
+		) );
 	}
 }
 add_action( 'customize_register', 'cultiv8_customize_register', 11 );

@@ -5,10 +5,10 @@
  * @package Cultiv8
  */
  $panel_height_class = ('auto' == get_theme_mod( 'cultiv8_panel'.$pique_panel.'_height' ) ? ' pique-panel-autoheight': '');
- $panel_slug = $post->slug;
+ $panel_slug = $post->post_name;
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'pique-panel pique-panel'. esc_attr( $pique_panel ) . $panel_height_class ); ?> data-panel-title="Panel <?php echo esc_attr( $pique_panel ); ?>" >
+<article id="<?php echo $panel_slug; ?>" <?php post_class( 'pique-panel pique-panel'. esc_attr( $pique_panel ) . $panel_height_class ); ?> data-panel-title="Panel <?php echo esc_attr( $pique_panel ); ?>" >
 	<?php if ( has_post_thumbnail() ) :
 		$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'pique-hero' ); ?>
 		<div class="pique-panel-background" style="background-image:url(<?php echo esc_url( $thumbnail[0] ); ?>)"></div>

@@ -54,13 +54,14 @@
 				if ( get_theme_mod( 'pique_panel' . $panel ) ) :
 					$post = get_post( get_theme_mod( 'pique_panel' . $panel ) );
 					setup_postdata( $post );
+					$visible = ! get_theme_mod( 'cultiv8_panel' . $panel .'_hideinmenu' ) ;
 					// Just in case the user didn't set a title for the page, we're going to generate one from the slug
 					if ( '' === get_the_title() ) :
 						$title = str_replace( '-', ' ', $post->post_name );
 					else :
 						$title = get_the_title();
 					endif;
-					$panel_links[] = '<li><a href="#post-' . get_the_ID() . '">' . $title . '</a></li>';
+					if( $visible ) $panel_links[] = '<li><a href="#' . $post->post_name . '">' . $title . '</a></li>';
 					wp_reset_postdata();
 				endif;
 			endforeach;
