@@ -4,7 +4,9 @@ Description: Church theme with Church Theme Content support. Child theme of Piqu
 Author: Justin Serrano
 Template: pique
 */
-
+.site-branding .site-logo-link img {
+	max-height: 75px;
+}
 
 /* Font Adjustments */
 .highlight{
@@ -35,24 +37,48 @@ Template: pique
 	font-size: 1.1em;
 }
 
+/* Front-page panel adjustment */ 
 .pique-panel-autoheight {
 	min-height: auto !important;
 }
+.pique-panel-background {
+	background-size: cover;
+}
+.pique-frontpage .pique-panel-content .entry-content{
+	max-width: 100%;
+}
+.pique-frontpage .entry-content h4 { 
+	margin-top: 0; 
+}
+.pique-frontpage .entry-footer{ 
+	display: none 
+}
+.logged-in .entry-footer { 
+	display: block; 
+}
+#pique-hero { 
+	min-height: auto; 
+}
+#pique-hero .pique-panel-content { 
+	padding: 160px 0 0 !important; 
+}
+#pique-hero .pique-panel-content .entry-content{
+	max-width: none;
+	margin: 20px 0 0; padding: 0
+}
 
+/* Block styles */
 .flush-bottom ~ * {
 	margin-top: 0;
 	padding-top: 0;
 }
-
 .flush-bottom {
   margin-bottom: 0;
 	padding-bottom: 0;
 }
-
 .textcenter{
 	text-align: center;
 }
-
 .flex-container {
 	display: flex;
 	justify-content: space-around;
@@ -60,11 +86,9 @@ Template: pique
 	align-content: space-around;
 	flex-flow: column;
 }
-
 .flex-container > .flex-item {
 	flex: 1;
 }
-
 .box {
 	border-radius: 5px;
 	padding: 10px;
@@ -85,11 +109,18 @@ Template: pique
 	padding-bottom: 0;
 	margin: 10px auto;
 }
-.cultiv8-fixedratio.cultiv8-square{ width: 60%; max-width: 280px; }
-.cultiv8-fixedratio.cultiv8-fiveseven{ width: 50%; }
-.cultiv8-fixedratio.cultiv8-sevenfive{ width: 70%; }
-.cultiv8-fixedratio.cultiv8-sixteennine{ width: 80%; }
-
+.cultiv8-fixedratio.cultiv8-square{ 
+	width: 60%; max-width: 280px; 
+}
+.cultiv8-fixedratio.cultiv8-fiveseven{ 
+	width: 50%; 
+}
+.cultiv8-fixedratio.cultiv8-sevenfive{ 
+	width: 70%; 
+}
+.cultiv8-fixedratio.cultiv8-sixteennine{ 
+	width: 80%; 
+}
 .cultiv8-fixedratio:before{
 	display: block;
 	content: "";
@@ -111,7 +142,6 @@ Template: pique
 	overflow: hidden;
 	border-radius: 50%;
 }
-
 .cultiv8-fixedratio-content {
     position: absolute;
     top: 0;
@@ -126,15 +156,9 @@ h3.cultiv8-ctc-position {
 	text-align: center;
 }
 
-.pique-panel-bakcground {
-	background-size: cover;
-}
-
-.pique-frontpage .pique-panel-content .entry-content{
-	max-width: 80%;
-}
-#pique-hero .pique-panel-content .entry-content{
-	max-width: none;
+/* CTCEX Styles */
+.ctcex-slider{
+	margin: 20px auto;
 }
 
 /* CTCEX Sermon */
@@ -163,11 +187,13 @@ h3.cultiv8-ctc-position {
 
 
 @media (min-width: 768px) {
+	.pique-frontpage .pique-panel-content .entry-content {
+		max-width: 80%;
+	}
+
 	.ctcex-sermon-container,
 	.ctcex-events-container,
 	.flex-container {
-		flex-flow: row wrap;
-	}
 		flex-flow: row wrap;
 	}
 	

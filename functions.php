@@ -12,7 +12,7 @@ function cultiv8_setup(){
 		
 	// Translation
 	load_theme_textdomain( 'cultiv8', get_template_directory() . '/languages' );
-
+	
 	// Add Church Theme Content support
 	if( function_exists( 'cultiv8_add_ctc' ) ) 
 		cultiv8_add_ctc();
@@ -21,6 +21,9 @@ function cultiv8_setup(){
 		if( function_exists( 'ctcex_update_recurring_events' ) ) 
 			ctcex_update_recurring_events();
 	} 
+	
+	// Setup images
+	cultiv8_image_setup();
 	
 } // cultiv8_setup
 
