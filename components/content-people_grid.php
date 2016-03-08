@@ -4,7 +4,6 @@
  *
  * @package Cutiv8
  */
-ggd;
 $query = array(
 	'post_type' 			=> 'ctc_person', 
 	'orderby' 				=> 'menu_order',

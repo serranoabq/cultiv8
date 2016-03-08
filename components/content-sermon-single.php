@@ -41,7 +41,7 @@ $ctc_sermons = new WP_Query( $query );
 		$urls = explode( "\r\n", $data[ 'url' ] );
 	?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<div 
+			<div> 
 			<?php
 			if ( has_post_thumbnail() ) :
 				the_post_thumbnail( 'pique-square' );

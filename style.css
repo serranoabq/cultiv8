@@ -22,10 +22,10 @@ Template: pique
 	font-size: 2em;
 }
 .medfont{
-	font-size: 1.5em;
+	font-size: 1.3em;
 }
 .midfont{
-	font-size: 1.1em;
+	font-size: 1.15em;
 }
 .smfont{
 	font-size: 0.7em;
@@ -62,9 +62,10 @@ Template: pique
 #pique-hero .pique-panel-content { 
 	padding: 160px 0 0 !important; 
 }
-#pique-hero .pique-panel-content .entry-content{
+#pique-hero .pique-panel-content .entry-content {
 	max-width: none;
-	margin: 20px 0 0; padding: 0
+	margin: 20px auto 0; 
+	padding: 0
 }
 
 /* Block styles */
@@ -88,6 +89,7 @@ Template: pique
 }
 .flex-container > .flex-item {
 	flex: 1;
+	min-width: 0;
 }
 .box {
 	border-radius: 5px;
@@ -176,6 +178,7 @@ h3.cultiv8-ctc-position {
 	padding-left: 20px;
 	flex: 1;
 	max-width:100%;
+	min-width: 0;
 }
 .ctcex-events-container .ctcex-event-media,
 .ctcex-sermon-container .ctcex-sermon-media{
@@ -187,6 +190,7 @@ h3.cultiv8-ctc-position {
 
 
 @media (min-width: 768px) {
+	#pique-hero .pique-panel-content .entry-content,
 	.pique-frontpage .pique-panel-content .entry-content {
 		max-width: 80%;
 	}
