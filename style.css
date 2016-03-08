@@ -42,7 +42,7 @@ Template: pique
 	min-height: auto !important;
 }
 .pique-panel-background {
-	background-size: cover;
+	/* background-size: cover; */
 }
 .pique-frontpage .pique-panel-content .entry-content{
 	max-width: 100%;
