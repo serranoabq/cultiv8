@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
 * Cultiv8 Theme Customizer
 *
