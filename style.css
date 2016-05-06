@@ -2,9 +2,11 @@
 Theme Name: Cultiv8
 Description: Church theme with Church Theme Content support. Child theme of Pique
 Author: Justin Serrano
+Version: 0.5.5
 Template: pique
 */
 .site-branding .site-logo-link img {
+	height: auto;
 	max-height: 75px;
 }
 

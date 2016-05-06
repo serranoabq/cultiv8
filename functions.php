@@ -25,6 +25,9 @@ function cultiv8_setup(){
 	// Setup images
 	cultiv8_image_setup();
 	
+	// Add support for site logo in WP 4.5
+	add_theme_support( 'custom-logo' );
+	
 } // cultiv8_setup
 
 /// Enqueue parent & child theme stylesheets

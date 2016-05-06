@@ -56,12 +56,16 @@ function cultiv8_getImage( $post_id = null, $size = 'large' ){
 
 // Site logo 
 function cultiv8_get_site_logo() {
-	if( function_exists( 'jetpack_get_site_logo' ) ){
+	if( function_exists( 'get_custom_logo' ) ){
+		// Try to use WP4.5 built in site logo feature
+		return wp_get_attachment_image_url( get_theme_mod( 'custom_logo'), 'full' );
 		
+	} elseif( function_exists( 'jetpack_get_site_logo' ) ){
+		// If not available, try Jetpack's site logo feature 
 		return jetpack_get_site_logo();
 	
 	} else {
-	
+		// Last resort, try our own feature
 		if( get_theme_mod( 'cultiv8_site_logo' ) ) {
 			
 			return get_theme_mod( 'cultiv8_site_logo' );
@@ -77,35 +81,29 @@ function cultiv8_get_site_logo() {
 // Site logo
 function cultiv8_the_site_logo() {
 	global $wp_customize;
-	if( function_exists( 'jetpack_the_site_logo' ) ){
+	$url = cultiv8_get_site_logo();
 		
-		// Fallback to Jetpack Site Logo, if available
-		jetpack_the_site_logo();
+	if( $url ) {
+		// Output image HTML
+		$html = sprintf( '<a href="%1$s" class="site-logo-link" rel="home" itemprop="url">' . 
+			'<img src="%2$s" class="site-logo attachment-pique-logo" itemprop="logo" data-size="pique-logo"/></a>',
+			esc_url( home_url( '/' ) ),
+			$url 
+		);
+		echo $html;
 	
-	} else {
+	} else { 
 	
-		if( get_theme_mod( 'cultiv8_site_logo' ) ) {
-
-			$url = get_theme_mod( 'cultiv8_site_logo' );
-			$html = sprintf( '<a href="%1$s" class="site-logo-link" rel="home" itemprop="url">' . 
-				'<img src="%2$s" class="site-logo attachment-pique-logo" itemprop="logo" data-size="pique-logo"/></a>',
-				esc_url( home_url( '/' ) ),
-				$url 
+		// Generate placeholder  for the customizer
+		if( is_a( $wp_customize, 'WP_Customize_Manager' ) && $wp_customize->is_preview() ) {
+			$html = sprintf( '<a href="%1$s" class="site-logo-link" style="display:none">' . '
+				<img class="site-logo attachment-pique-logo" data-size="pique-logo "/></a>',
+				esc_url( home_url( '/' ) )
 			);
 			echo $html;
+		} 
 		
-		} else { 
-		
-			// Generate basic content for the customizer
-			if( is_a( $wp_customize, 'WP_Customize_Manager' ) && $wp_customize->is_preview() ) {
-				$html = sprintf( '<a href="%1$s" class="site-logo-link" style="display:none">' . '
-					<img class="site-logo" data-size="pique-logo"/></a>',
-					esc_url( home_url( '/' ) )
-				);
-				echo $html;
-			} 
-			
-		}
 	}
+
 	return ;
 }

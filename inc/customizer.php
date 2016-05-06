@@ -6,8 +6,8 @@
 */
 function cultiv8_customize_register( $wp_customize ) {
 	
-	// Site Logo functionality if Jetpack is not installed
-	if( ! function_exists( 'jetpack_the_site_logo' ) ) {
+	// Site Logo functionality if Jetpack is not installed or WP4.5 which has site logo built in
+	if( ! function_exists( 'the_custom_logo' ) && ! function_exists( 'jetpack_the_site_logo' ) ) {
 		$wp_customize->get_section('title_tagline')->title = __( 'Site Title, Tagline, and Logo', 'cultiv8' );
 
 		$wp_customize->add_setting( 'cultiv8_site_logo', array(
