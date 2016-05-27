@@ -277,12 +277,12 @@ function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 			$edit_link, 
 			__( 'Edit event', 'ctcex' )
 			) : '';
+	
 	// Prepare output
 	$item_output = sprintf(
 		'<div class="%s">
 			<div class="%s">%s</div>
 			<div class="%s">
-				<h3><a href="%s">%s</a></h3>
 				%s
 				%s
 				%s
@@ -295,8 +295,6 @@ function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 		$classes[ 'media' ],
 		$img_src,
 		$classes[ 'details' ],
-		$url,
-		$title,
 		$date_src,
 		$time_src,
 		$location_src,
@@ -304,5 +302,5 @@ function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 		$edit_link
 	);
 	
-	return '<div id="ctcex-events" class="ctcex-events-list ctcex-slider ctcex-hidden">' . $item_output . '</div>';
+	return '<div id="ctcex-events" class="ctcex-events-list">' . $item_output . '</div>';
 }

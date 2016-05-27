@@ -4,7 +4,6 @@
  *
  * @package Cultiv8
  */
-
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -14,7 +13,7 @@
 
 	<div class="entry-content">
 		<!-- Event details -->
-		<?php cultiv8_the_event_details( the_ID(), 'fa' ); ?>
+		<?php cultiv8_the_event_details( get_the_ID(), 'fa' ); ?>
 		<!-- End event details -->
 		
 		<?php the_content(); ?>
