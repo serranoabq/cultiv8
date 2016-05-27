@@ -197,3 +197,112 @@ function cultiv8_metabox_location_slider() {
 		new CT_Meta_Box( $meta_box );
 }
 
+function cultiv8_the_event_details( $post_id, $glyph = 'fa' ){
+	echo cultiv8_get_event_details( $post_id, $glyph );
+}
+
+function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
+	$classes = array(
+		'container'  => 'ctcex-events-container',
+		'media'      => 'ctcex-event-media',
+		'details'    => 'ctcex-event-details',
+		'date'       => 'ctcex-event-date',
+		'time'       => 'ctcex-event-time',
+		'location'   => 'ctcex-event-location',
+		'categories' => 'ctcex-event-categories',
+		'img'        => 'ctcex-event-img'
+	);
+	$title 		= get_the_title( $post_id ) ;
+	$url 			= get_permalink( $post_id );
+	$data 		= cultiv8_get_event_data( $post_id );
+
+	// Event date
+	$date_str = sprintf( '%s%s',  date_i18n( 'l, F j', strtotime( $data[ 'start' ] ) ), $data[ 'start' ] != $data[ 'end' ] ? ' - '. date_i18n( 'l, F j', strtotime( $data[ 'end' ] ) ) : '' );
+	$date_src = sprintf( 
+		'<div class="%s"><i class="%s %s"></i> %s</div>', 
+		$classes[ 'date' ], 
+		$glyph === 'gi' ? 'genericon' : 'fa', 
+		$glyph === 'gi' ? 'genericon-month' : 'fa-calendar', 
+		$date_str );
+	
+	// Event time
+	$time_str = sprintf( '%s%s',  $data[ 'time' ], $data[ 'endtime' ] ? ' - '. $data[ 'endtime' ] : '' );
+	$time_src = '';
+	if( $time_str ) {
+		$time_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'time' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-time' : 'fa-clock-o', 
+			$time_str );
+	}
+	
+	// Event location
+	$location_txt = $data[ 'venue' ] ? $data[ 'venue' ] : $data[ 'address' ];
+	$location_src = '';
+	if( $location_txt ) {
+		$location_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'location' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-location' : 'fa-map-marker', 
+			$location_txt );
+	}
+	
+	// Event categories
+	$categories_src = '';
+	if( $data[ 'categories' ] ) {
+		$categories_src = sprintf( 
+			'<div class="%s"><i class="%s %s-tag"></i> %s</div>', 
+			$classes[ 'location' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$data[ 'categories' ] );
+	}
+	
+	// Get image
+	$img_src = $data[ 'img' ] ? sprintf( 
+		'%s
+			<img class="%s" src="%s" alt="%s"/>
+		%s', 
+		$data[ 'map_used' ] ? '<a href="' . $data[ 'map_url' ] . '" target="_blank">' : '',
+		$classes[ 'img' ], 
+		$data[ 'img' ], 
+		get_the_title(),
+		'</a>' 
+	) : '' ;
+	
+	$edit_link = get_edit_post_link( $post_id, 'link' );
+	$edit_link = $edit_link ? sprintf( '<a href="%s" class="alignright">%s</a>',
+			$edit_link, 
+			__( 'Edit event', 'ctcex' )
+			) : '';
+	// Prepare output
+	$item_output = sprintf(
+		'<div class="%s">
+			<div class="%s">%s</div>
+			<div class="%s">
+				<h3><a href="%s">%s</a></h3>
+				%s
+				%s
+				%s
+				%s
+				%s
+			</div>
+		</div>
+		', 
+		$classes[ 'container' ],
+		$classes[ 'media' ],
+		$img_src,
+		$classes[ 'details' ],
+		$url,
+		$title,
+		$date_src,
+		$time_src,
+		$location_src,
+		$categories_src,
+		$edit_link
+	);
+	
+	return '<div id="ctcex-events" class="ctcex-events-list ctcex-slider ctcex-hidden">' . $item_output . '</div>';
+}

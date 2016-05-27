@@ -70,6 +70,11 @@ Template: pique
 	padding: 0
 }
 
+.site-footer{
+	background-repeat: repeat-y;
+	background-size: contain;
+}
+
 /* Block styles */
 .flush-bottom ~ * {
 	margin-top: 0;
