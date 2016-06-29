@@ -1,6 +1,6 @@
 <?php
 /**
- * Template part for displaying single event posts.
+ * Template part for displaying single sermon posts.
  *
  * @package Cultiv8
  */
@@ -12,9 +12,9 @@
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
-		<!-- Event details -->
-		<?php cultiv8_the_event_details( get_the_ID(), 'fa' ); ?>
-		<!-- End event details -->
+		<!-- Sermon details -->
+		<?php cultiv8_the_person_details( get_the_ID(), 'fa' ); ?>
+		<!-- End sermon details -->
 		
 		<?php the_content(); ?>
 

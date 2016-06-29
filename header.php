@@ -30,7 +30,7 @@
 			<a class="pique-header" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 
 			<?php // If the post uses a Featured Image, let's show that
-			if ( is_singular() && has_post_thumbnail() ) :
+			if ( is_singular() && has_post_thumbnail() && get_theme_mod( 'cultiv8_show_featured_image' ) ) :
 				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) );
 			else : // Otherwise, let's just show the header image
 			?>

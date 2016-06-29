@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all single event posts.
+ * The template for displaying all single sermon posts.
  *
  * @package Cultiv8
  */
@@ -12,22 +12,12 @@ get_header(); ?>
 
 		<?php while ( have_posts() ) : the_post(); ?>
 
-			<?php get_template_part( 'components/content', 'single-event' ); ?>
+			<?php get_template_part( 'components/content', 'single-sermon' ); ?>
 
 			<?php 
 				$meta_args = array(
-					'order' 		=> 'ASC',
-					'orderby' 	=> 'meta_value',
-					'meta_key' 	=> '_ctc_event_start_date_start_time',
-					'meta_type' => 'DATETIME',
-					'meta_query' => array(
-						array(
-							'key' 	=> '_ctc_event_end_date_end_time',
-							'value' => date_i18n( 'Y-m-d H:i:s' ), // today localized
-							'compare' => '>=', // later than today
-							'type' => 'DATE',
-						),
-					)
+					'order' 		=> 'DESC',
+					'orderby' 	=> 'date',
 				);
 				cultiv8_link_pages_by_meta( array(
 					'prev_text' => '<span>' . esc_html__( 'Previous', 'pique' ) . '</span> %title',
@@ -35,6 +25,8 @@ get_header(); ?>
 				), $meta_args );
  
 			?>
+
+			<?php get_template_part( 'components/content','related-sermons' ); ?>
 
 			<?php
 			// If comments are open or we have at least one comment, load up the comment template.
