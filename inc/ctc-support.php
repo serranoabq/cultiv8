@@ -274,24 +274,18 @@ function cultiv8_the_event_details( $post_id, $glyph = 'fa' ){
 		$classes[ 'img' ], 
 		$data[ 'img' ], 
 		get_the_title(),
-		'</a>' 
+		$data[ 'map_used' ] ? '</a>' : ''
 	) : '' ;
 	
 	$names = cultiv8_get_option( 'ctc-events', __( 'Events/Event', 'cultiv8' ) );
 	$plural_name = explode( '/', strtolower( $names ) );
 	$single_name = array_pop( $plural_name );
-	$edit_link = get_edit_post_link( $post_id, 'link' );
-	$edit_link = $edit_link ? sprintf( '<a href="%s" class="alignright">%s</a>',
-			$edit_link, 
-			__( 'Edit', 'ctcex' ) . ' ' . $single_name
-			) : '';
 	
 	// Prepare output
 	$item_output = sprintf(
 		'<div class="%s">
 			<div class="%s">%s</div>
 			<div class="%s">
-				%s
 				%s
 				%s
 				%s
@@ -306,8 +300,7 @@ function cultiv8_the_event_details( $post_id, $glyph = 'fa' ){
 		$date_src,
 		$time_src,
 		$location_src,
-		$categories_src,
-		$edit_link
+		$categories_src
 	);
 	
 	echo '<div id="ctcex-events" class="ctcex-events-list">' . $item_output . '</div>';
@@ -387,18 +380,12 @@ function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
 	$names = cultiv8_get_option( 'ctc-sermons', __( 'sermons/sermon', 'cultiv8' ) );
 	$plural_name = explode( '/', strtolower( $names ) );
 	$single_name = array_pop( $plural_name );
-	$edit_link = get_edit_post_link( $post_id, 'link' );
-	$edit_link = $edit_link ? sprintf( '<a href="%s" class="alignright">%s</a>',
-			$edit_link, 
-			__( 'Edit', 'ctcex' ) . ' ' . $single_name
-			) : '';
 	
 	// Prepare output
 	$item_output =sprintf(
 		'<div class="%s">
 			<div class="%s">%s</div>
 			<div class="%s">
-				%s
 				%s
 				%s
 				%s
@@ -414,8 +401,7 @@ function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
 		$speaker_src,
 		$series_src,
 		$topic_src,
-		$audio_link_src,
-		$edit_link
+		$audio_link_src
 	);
 	
 	echo $item_output;
@@ -456,12 +442,7 @@ function cultiv8_the_person_details( $post_id, $glyph = 'fa' ){
 	$names = cultiv8_get_option( 'ctc-people', __( 'people/person', 'cultiv8' ) );
 	$plural_name = explode( '/', strtolower( $names ) );
 	$single_name = array_pop( $plural_name );
-	$edit_link = get_edit_post_link( $post_id, 'link' );
-	$edit_link = $edit_link ? sprintf( '<a href="%s" class="alignright">%s</a>',
-			$edit_link, 
-			__( 'Edit', 'ctcex' ) . ' ' . $single_name
-			) : '';
-	
+		
 	// Prepare output
 	$item_output =sprintf(
 		'<div class="%s">
@@ -469,16 +450,103 @@ function cultiv8_the_person_details( $post_id, $glyph = 'fa' ){
 			<div class="%s">
 				%s
 				%s
-				</div>
-				%s
 			</div>
+		</div>
 		', 
 		$classes[ 'container' ],
 		$img_src,
 		$classes[ 'details' ],
 		$position_src,
-		$url_src,
-		$edit_link
+		$url_src
+	);
+	
+	echo $item_output;
+}
+
+function cultiv8_the_location_details( $post_id, $glyph = 'fa' ){
+	$classes = array(
+		'container'  => 'ctcex-location-container',
+		'details'    => 'ctcex-location-details',
+		'media'      => 'ctcex-location-media',
+		'title'      => 'ctcex-location-title',
+		'address'    => 'ctcex-location-address',
+		'times'      => 'ctcex-location-times',
+		'phone'      => 'ctcex-location-phone',
+		'img'        => 'ctcex-location-img'
+	);
+	wp_enqueue_style( 'cultiv8-glyphs', get_stylesheet_directory_uri() . '/assets/css/glyphs.css', array(), null, 'screen' );
+	
+	$title 		= get_the_title( $post_id ) ;
+	$data 		= cultiv8_get_location_data( $post_id );
+	
+	// Address
+	$addr_src = '';
+	if( $data[ 'address' ] ){
+		$addr_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'address' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-location' : 'fa-map-marker', 
+			$data[ 'address' ] );
+	}
+	
+	// Times
+	$time_src = '';
+	if( $data[ 'times' ] ) {
+		$time_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'times' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-time' : 'fa-clock-o', 
+			$data[ 'times' ] );
+	}
+	
+	// Phone
+	$phone_src = '';
+	if( $data[ 'phone' ] ) {
+		$phone_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'phone' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-phone' : 'fa-mobile', 
+			$data[ 'phone' ] );
+	}
+	
+	// Get image
+	$img_src = $data[ 'slider' ] ? do_shortcode( $data[ 'slider' ] ) : ''; 
+	$img_src = !$img_src ? sprintf( 
+		'%s
+			<img class="%s" src="%s" alt="%s"/>
+		%s', 
+		$data[ 'map_used' ] ? '<a href="' . $data[ 'map_url' ] . '" target="_blank">' : '',
+		$classes[ 'img' ], 
+		$data[ 'img' ], 
+		get_the_title(),
+		$data[ 'map_used' ] ? '</a>' : ''
+	) : $img_src ;
+	
+	$names = cultiv8_get_option( 'ctc-people', __( 'locations/location', 'cultiv8' ) );
+	$plural_name = explode( '/', strtolower( $names ) );
+	$single_name = array_pop( $plural_name );
+		
+	// Prepare output
+	$item_output =sprintf(
+		'<div class="%s">
+			<div class="%s">%s</div>
+			<div class="%s">
+				%s
+				%s
+				%s
+				</div>
+			</div>
+		', 
+		$classes[ 'container' ],
+		$classes[ 'media' ],
+		$img_src,
+		$classes[ 'details' ],
+		$addr_src,
+		$time_src,
+		$phone_src
 	);
 	
 	echo $item_output;

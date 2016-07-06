@@ -71,7 +71,7 @@
 			if ( 'page-templates/template-grid.php' === get_page_template_slug() ) :
 				get_template_part( 'components/content', 'grid' );
 			else:
-				error_log( get_page_template_slug() );
+				//error_log( get_page_template_slug() );
 				// $pos = strpos( get_page_template_slug(), 'page-templates/template-' );
 				// if ( $pos !== false ) :
 					// $template_part = str_replace( 'page-templates/template-', '', get_page_template_slug() );

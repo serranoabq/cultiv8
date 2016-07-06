@@ -2,7 +2,7 @@
 Theme Name: Cultiv8
 Description: Church theme with Church Theme Content support. Child theme of Pique
 Author: Justin Serrano
-Version: 0.5.5
+Version: 0.6
 Template: pique
 */
 .site-branding .site-logo-link img {
@@ -28,6 +28,9 @@ Template: pique
 }
 .midfont{
 	font-size: 1.15em;
+}
+.normfont{
+	font-size: 1em;
 }
 .smfont{
 	font-size: 0.7em;
@@ -87,6 +90,8 @@ Template: pique
 .textcenter{
 	text-align: center;
 }
+
+/* Flex */ 
 .flex-container {
 	display: flex;
 	justify-content: space-around;
@@ -98,6 +103,8 @@ Template: pique
 	flex: 1;
 	min-width: 0;
 }
+
+/* Box */
 .box {
 	border-radius: 5px;
 	padding: 10px;
@@ -109,6 +116,32 @@ Template: pique
 }
 .box-light {
 	background: rgba(255,255,255,0.2);
+}
+
+/* Button */
+button.active,
+.archive .read-more a.active,
+.blog .read-more a.active,
+.search-results .read-more a.active,
+.button.active,
+input[type='button'].active,
+input[type='reset'].active,
+input[type='submit'].active{
+	background-color: transparent;
+	border-color: #83b6cc;
+	color: #83b6cc;
+}
+button.minimal.active,
+.archive .read-more a.minimal.active,
+.blog .read-more a.minimal.active,
+.search-results .read-more a.minimal.active,
+.button.minimal.active
+input[type='button'].minimal.active,
+input[type='reset'].minimal.active,
+input[type='submit'].minimal.active{
+	background-color: transparent;
+	border-color: #eff6f9;
+	color: #eff6f9;
 }
 
 /* Fixed ratio boxes*/
@@ -165,13 +198,42 @@ h3.cultiv8-ctc-position {
 	text-align: center;
 }
 
+.taxonomy-description {
+	padding: 0 5%;
+}
+
 /* CTCEX Styles */
 .ctcex-slider{
 	margin: 20px auto;
 }
 
-/* CTCEX Sermon */
+.ctcex-overlay {
+	cursor: pointer;
+	width: 2em;
+	background: rgba(0,0,0,0.5);
+	height: 2em;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 3em;
+	text-align: center;
+	line-height: 1.8em;
+	transform: translate(-50%,-50%);
+	color: #fff;
+	border-radius: 50%;
+	border: 8px solid white;
+	padding-left: 14px;
+}
+
+/* CTCEX Specifics */
+.ctcex-person-container{
+	width: 100%;
+	margin: 20px auto;
+	padding: 10px;
+}
+
 .ctcex-sermon-container,
+.ctcex-location-container,
 .ctcex-events-container{
 	display: flex !important;
 	align-content: space-around;
@@ -180,14 +242,18 @@ h3.cultiv8-ctc-position {
 }
 .ctcex-events-container .ctcex-event-media,
 .ctcex-events-container .ctcex-event-details,
+.ctcex-location-container .ctcex-location-media,
+.ctcex-location-container .ctcex-location-details,
 .ctcex-sermon-container .ctcex-sermon-media,
 .ctcex-sermon-container .ctcex-sermon-details{
 	padding-left: 20px;
 	flex: 1;
 	max-width:100%;
 	min-width: 0;
+	margin-bottom: 10px;
 }
 .ctcex-events-container .ctcex-event-media,
+.ctcex-location-container .ctcex-location-media,
 .ctcex-sermon-container .ctcex-sermon-media{
 	flex: 2;
 	padding: 10px;
@@ -195,13 +261,39 @@ h3.cultiv8-ctc-position {
 	background: rgba(255,255,255,0.5);
 }
 
+.ctcex-events-container .ctcex-event-details div[class^="ctcex-event-"],
+.ctcex-location-container .ctcex-location-details div[class^="ctcex-location-"] {
+    position: relative;
+    min-height: 30px;
+    padding-left: 22px;
+}
+.ctcex-events-container .ctcex-event-details .fa,
+.ctcex-events-container .ctcex-event-details .genericon, 
+.ctcex-location-container .ctcex-location-details .fa, 
+.ctcex-location-container .ctcex-location-details .genericon {
+    float: left;
+    width: 18px;
+    position: absolute;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
 @media (min-width: 768px) {
-	.pique-frontpage .pique-panel-content .entry-content {
-		max-width: 80%;
+	.ctcex-person-container{
+		width: 45%;
+	}
+	
+	.pique-panel-content .entry-content {
+		max-width: 900px;
 	}
 
 	.ctcex-sermon-container,
+	.ctcex-location-container,
 	.ctcex-events-container,
 	.flex-container {
 		flex-flow: row wrap;
@@ -238,5 +330,7 @@ h3.cultiv8-ctc-position {
 	
 }
 @media (min-width: 1024px) {
-
+	.ctcex-person-container{
+		width: 30%;
+	}	
 }

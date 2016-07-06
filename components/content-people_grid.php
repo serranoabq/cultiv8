@@ -11,7 +11,7 @@ $query = array(
 	'posts_per_page'  => -1,
 );
 $ctc_people = new WP_Query( $query );
-error_log( json_encode( $ctc_people ) );
+//error_log( json_encode( $ctc_people ) );
 ?>
 
 <?php if ( $ctc_people->have_posts() ) : ?>
