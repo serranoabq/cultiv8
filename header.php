@@ -30,8 +30,8 @@
 			<a class="pique-header" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 
 			<?php // If the post uses a Featured Image, let's show that
-			if ( is_singular() && has_post_thumbnail() ) :
-				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) );
+			if ( is_singular() && has_post_thumbnail() && get_theme_mod( 'cultiv8_show_featured_image' ) ) :
+				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) ); 
 			else : // Otherwise, let's just show the header image
 			?>
 				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); ?>">
@@ -47,7 +47,6 @@
 		</div><!-- .site-branding -->
 <?php /* */ ?>
 		<?php if ( pique_is_frontpage() AND get_theme_mod( 'pique_menu' ) ) : ?>
-
 			<?php
 			// Get each of our panels and output a link to that section ID on the page
 			foreach ( range( 1, 8 ) as $panel ) :

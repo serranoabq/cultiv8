@@ -124,6 +124,15 @@ function cultiv8_get_recurrence_note( $post_obj ) {
 		return '';
 }
 
+function cultiv8_get_option( $option, $default = '' ){
+	if( class_exists( 'CTC_Extender' ) )
+		return ctcex_get_option( $option, $default );
+	else {
+		$out = get_option( $option, $default );
+		return $out;
+	}
+}
+
 function cultiv8_get_default_data( $post_id ) {
 	$data = array(
 		'permalink'   => get_permalink( $post_id ),
@@ -198,10 +207,6 @@ function cultiv8_metabox_location_slider() {
 }
 
 function cultiv8_the_event_details( $post_id, $glyph = 'fa' ){
-	echo cultiv8_get_event_details( $post_id, $glyph );
-}
-
-function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 	$classes = array(
 		'container'  => 'ctcex-events-container',
 		'media'      => 'ctcex-event-media',
@@ -269,21 +274,18 @@ function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 		$classes[ 'img' ], 
 		$data[ 'img' ], 
 		get_the_title(),
-		'</a>' 
+		$data[ 'map_used' ] ? '</a>' : ''
 	) : '' ;
 	
-	$edit_link = get_edit_post_link( $post_id, 'link' );
-	$edit_link = $edit_link ? sprintf( '<a href="%s" class="alignright">%s</a>',
-			$edit_link, 
-			__( 'Edit event', 'ctcex' )
-			) : '';
+	$names = cultiv8_get_option( 'ctc-events', __( 'Events/Event', 'cultiv8' ) );
+	$plural_name = explode( '/', strtolower( $names ) );
+	$single_name = array_pop( $plural_name );
 	
 	// Prepare output
 	$item_output = sprintf(
 		'<div class="%s">
 			<div class="%s">%s</div>
 			<div class="%s">
-				%s
 				%s
 				%s
 				%s
@@ -298,9 +300,255 @@ function cultiv8_get_event_details( $post_id, $glyph = 'fa' ){
 		$date_src,
 		$time_src,
 		$location_src,
-		$categories_src,
-		$edit_link
+		$categories_src
 	);
 	
-	return '<div id="ctcex-events" class="ctcex-events-list">' . $item_output . '</div>';
+	echo '<div id="ctcex-events" class="ctcex-events-list">' . $item_output . '</div>';
 }
+
+function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
+	$classes = array(
+		'container'  => 'ctcex-sermon-container',
+		'media'      => 'ctcex-sermon-media',
+		'details'    => 'ctcex-sermon-details',
+		'date'       => 'ctcex-sermon-date',
+		'speaker'    => 'ctcex-sermon-speaker',
+		'series'     => 'ctcex-sermon-series',
+		'topic'      => 'ctcex-sermon-topic',
+		'audio-link' => 'ctcex-sermon-audio-link',
+		'audio'      => 'ctcex-sermon-audio',
+		'video'      => 'ctcex-sermon-video',
+		'img'        => 'ctcex-sermon-img'
+	);
+	$title 		= get_the_title( $post_id ) ;
+	$data 		= cultiv8_get_sermon_data( $post_id );
+
+	// Sermon date
+	$date_src = sprintf( '<div class="%s"><b>%s:</b> %s</div>', $classes[ 'date' ], __( 'Date', 'ctcex' ), get_the_date() );
+	
+	// Get speaker
+	$speaker_src = $data[ 'speakers' ] ? sprintf( '<div class="%s"><b>%s:</b> %s</div>', $classes[ 'speaker' ], __( 'Speaker', 'ctcex' ), $data[ 'speakers' ] ) : '';
+	
+	// Get series
+	$series_src = $data[ 'series' ] ?	sprintf( '<div class="%s"><b>%s:</b> <a href="%s">%s</a></div>', $classes[ 'series' ],  __( 'Series', 'ctcex' ), $data[ 'series_link' ], $data[ 'series' ] ) : '';
+	
+	// Get topics
+	// Topic name
+	$topic_name = explode( '/', cultiv8_get_option( 'ctc-sermon-topic' , __( 'Topic', 'ctcex') ) );
+	$topic_name = ucfirst( array_pop(  $topic_name ) );
+	$topic_src = $data[ 'topic' ] ? sprintf( '<div class="%s"><b>%s:</b> <a href="%s">%s</a></div>', $classes[ 'topic' ], $topic_name, $data[ 'topic_link' ], $data[ 'topic' ] ) : '';
+
+	// Get audio link
+	$audio_link_src = $data[ 'audio' ] ? sprintf( '<div class="%s"><b>%s:</b> <a href="%s">%s</a></div>', $classes[ 'audio-link' ], __( 'Audio', 'ctcex' ), $data[ 'audio' ], __( 'Download audio', 'ctcex' ) ) : '';
+	
+	// Get audio display
+	$audio_src = $data[ 'audio' ] ? sprintf( '<div class="%s">%s</div>', $classes[ 'audio' ], wp_audio_shortcode( array( 'src' => $data[ 'audio' ] ) ) ) : '';
+	
+	// Get video display
+	$video_iframe_class = strripos( $data[ 'video' ], 'iframe' ) ? 'iframe-container' : '';
+	$video_src = $data[ 'video' ] ? sprintf( '<div class="%s %s">%s</div>', $classes[ 'video' ], $video_iframe_class, $video_iframe_class ? $data[ 'video' ] : wp_video_shortcode( array( 'src' => $data[ 'video' ] ) ) ) : '';
+	
+	// Use the image as a placeholder for the video
+	$img_overlay_class = $data[ 'video' ] && $data[ 'img' ] ? 'ctcex-overlay' : '';
+	$img_overlay_js = $img_overlay_class ? sprintf(
+		'<div class="ctcex-overlay">
+			<i class="' . ( $glyph === 'gi' ? 'genericon genericon-play' : 'fa fa-play' ) . '"></i>
+		</div>
+		<script>
+			jQuery(document).ready( function($) {
+				$( ".%s" ).css( "position", "relative" );
+				$( ".ctcex-overlay" ).css( "cursor", "pointer" );
+				var vid_src = \'%s\';
+				vid_src = vid_src.replace( "autoPlay=false", "autoPlay=true" );
+				$( ".ctcex-overlay" ).click( function(){
+					$( this ).hide();
+					$( ".ctcex-sermon-img" ).fadeOut( 200, function() {
+						$( this ).replaceWith( vid_src );
+					});
+				} );
+			})
+		</script>', 
+		$classes[ 'media' ],
+		$video_src ) : '' ;
+		
+	// Get image
+	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';
+	$video_src = $img_overlay_class ? $img_src : $video_src;
+	
+	$img_video_output = $video_src ? $video_src : $img_src . $audio_src;
+	
+	$names = cultiv8_get_option( 'ctc-sermons', __( 'sermons/sermon', 'cultiv8' ) );
+	$plural_name = explode( '/', strtolower( $names ) );
+	$single_name = array_pop( $plural_name );
+	
+	// Prepare output
+	$item_output =sprintf(
+		'<div class="%s">
+			<div class="%s">%s</div>
+			<div class="%s">
+				%s
+				%s
+				%s
+				%s
+				%s
+			</div>
+		', 
+		$classes[ 'container' ],
+		$classes[ 'media' ],
+		$img_video_output,
+		$classes[ 'details' ],
+		$date_src,
+		$speaker_src,
+		$series_src,
+		$topic_src,
+		$audio_link_src
+	);
+	
+	echo $item_output;
+}
+
+function cultiv8_the_person_details( $post_id, $glyph = 'fa' ){
+	$classes = array(
+		'container'  => 'ctcex-person-container',
+		'details'    => 'ctcex-person-details',
+		'title'      => 'ctcex-person-title',
+		'position'   => 'ctcex-person-position',
+		'email'      => 'ctcex-person-email',
+		'urls'       => 'ctcex-person-urls',
+		'img'        => 'ctcex-person-img'
+	);
+	wp_enqueue_style( 'cultiv8-glyphs', get_stylesheet_directory_uri() . '/assets/css/glyphs.css', array(), null, 'screen' );
+	
+	$title 		= get_the_title( $post_id ) ;
+	$data 		= cultiv8_get_person_data( $post_id );
+	$urls     = explode( "\r\n", $data[ 'url' ] );
+	
+	if( $data[ 'email' ] )
+		$urls[] = 'mailto:' . $data[ 'email' ];
+	
+	// URLs
+	$url_src = sprintf( '<div class="%s %s ctcex-socials"><ul>', $classes[ 'urls' ], $glyph === 'gi' ? 'gi' : 'fa' );
+	foreach( $urls as $url_item ){
+		$url_src .= sprintf( '<li><a href="%s">%s</a></li>', $url_item, $url_item );
+	}
+	$url_src .= '</ul></div>';
+	
+	// Get position
+	$position_src = $data[ 'position' ] ? sprintf( '<h3 class="%s">%s</h3>', $classes[ 'position' ], $data[ 'position' ] ) : '';
+				
+	// Get image
+	$img_src = $data[ 'img' ] ? sprintf( '<img class="%s" src="%s" alt="%s"/>', $classes[ 'img' ], $data[ 'img' ], $title ) : '';
+
+	$names = cultiv8_get_option( 'ctc-people', __( 'people/person', 'cultiv8' ) );
+	$plural_name = explode( '/', strtolower( $names ) );
+	$single_name = array_pop( $plural_name );
+		
+	// Prepare output
+	$item_output =sprintf(
+		'<div class="%s">
+			%s
+			<div class="%s">
+				%s
+				%s
+			</div>
+		</div>
+		', 
+		$classes[ 'container' ],
+		$img_src,
+		$classes[ 'details' ],
+		$position_src,
+		$url_src
+	);
+	
+	echo $item_output;
+}
+
+function cultiv8_the_location_details( $post_id, $glyph = 'fa' ){
+	$classes = array(
+		'container'  => 'ctcex-location-container',
+		'details'    => 'ctcex-location-details',
+		'media'      => 'ctcex-location-media',
+		'title'      => 'ctcex-location-title',
+		'address'    => 'ctcex-location-address',
+		'times'      => 'ctcex-location-times',
+		'phone'      => 'ctcex-location-phone',
+		'img'        => 'ctcex-location-img'
+	);
+	wp_enqueue_style( 'cultiv8-glyphs', get_stylesheet_directory_uri() . '/assets/css/glyphs.css', array(), null, 'screen' );
+	
+	$title 		= get_the_title( $post_id ) ;
+	$data 		= cultiv8_get_location_data( $post_id );
+	
+	// Address
+	$addr_src = '';
+	if( $data[ 'address' ] ){
+		$addr_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'address' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-location' : 'fa-map-marker', 
+			$data[ 'address' ] );
+	}
+	
+	// Times
+	$time_src = '';
+	if( $data[ 'times' ] ) {
+		$time_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'times' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-time' : 'fa-clock-o', 
+			$data[ 'times' ] );
+	}
+	
+	// Phone
+	$phone_src = '';
+	if( $data[ 'phone' ] ) {
+		$phone_src = sprintf( 
+			'<div class="%s"><i class="%s %s"></i> %s</div>', 
+			$classes[ 'phone' ], 
+			$glyph === 'gi' ? 'genericon' : 'fa', 
+			$glyph === 'gi' ? 'genericon-phone' : 'fa-mobile', 
+			$data[ 'phone' ] );
+	}
+	
+	// Get image
+	$img_src = $data[ 'slider' ] ? do_shortcode( $data[ 'slider' ] ) : ''; 
+	$img_src = !$img_src ? sprintf( 
+		'%s
+			<img class="%s" src="%s" alt="%s"/>
+		%s', 
+		$data[ 'map_used' ] ? '<a href="' . $data[ 'map_url' ] . '" target="_blank">' : '',
+		$classes[ 'img' ], 
+		$data[ 'img' ], 
+		get_the_title(),
+		$data[ 'map_used' ] ? '</a>' : ''
+	) : $img_src ;
+	
+	$names = cultiv8_get_option( 'ctc-people', __( 'locations/location', 'cultiv8' ) );
+	$plural_name = explode( '/', strtolower( $names ) );
+	$single_name = array_pop( $plural_name );
+		
+	// Prepare output
+	$item_output =sprintf(
+		'<div class="%s">
+			<div class="%s">%s</div>
+			<div class="%s">
+				%s
+				%s
+				%s
+				</div>
+			</div>
+		', 
+		$classes[ 'container' ],
+		$classes[ 'media' ],
+		$img_src,
+		$classes[ 'details' ],
+		$addr_src,
+		$time_src,
+		$phone_src
+	);
+	
+	echo $item_output;
+}
+

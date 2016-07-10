@@ -21,3 +21,4 @@ Changelog
 
 * 0.5   - First working version
 * 0.5.5 - Make compatible with WP4.5
+* 0.6   - Add archives templates

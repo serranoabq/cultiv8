@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all single event posts.
+ * The template for displaying all single location posts.
  *
  * @package Cultiv8
  */
@@ -12,28 +12,17 @@ get_header(); ?>
 
 		<?php while ( have_posts() ) : the_post(); ?>
 
-			<?php get_template_part( 'components/content', 'single-event' ); ?>
+			<?php get_template_part( 'components/content', 'single-location' ); ?>
 
 			<?php 
 				$meta_args = array(
 					'order' 		=> 'ASC',
-					'orderby' 	=> 'meta_value',
-					'meta_key' 	=> '_ctc_event_start_date_start_time',
-					'meta_type' => 'DATETIME',
-					'meta_query' => array(
-						array(
-							'key' 	=> '_ctc_event_end_date_end_time',
-							'value' => date_i18n( 'Y-m-d H:i:s' ), // today localized
-							'compare' => '>=', // later than today
-							'type' => 'DATE',
-						),
-					)
+					'orderby' 	=> 'menu_order',
 				);
 				cultiv8_link_pages_by_meta( array(
 					'prev_text' => '<span>' . esc_html__( 'Previous', 'pique' ) . '</span> %title',
 					'next_text' => '<span>' . esc_html__( 'Next', 'pique' ) . '</span> %title',
 				), $meta_args );
- 
 			?>
 
 			<?php
