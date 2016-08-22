@@ -6,8 +6,8 @@
  *
  * @package Cultiv8
  */
-wp_enqueue_style( 'cultiv8-glyphs', get_stylesheet_directory_uri() . '/assets/css/glyphs.css', array(), null, 'screen' );
- 
+wp_enqueue_style( 'cultiv8-glyphs', get_stylesheet_directory_uri() . '/assets/css/glyphs.css' );
+
 $titles = cultiv8_option( 'ctc-people', __( 'People/Person', 'cultiv8' ) );
 $titles = explode( '/', $titles );
 $title = array_shift( $titles );
@@ -56,12 +56,24 @@ get_header(); ?>
 						align-content: space-around;						
 					}
 					
+					.ctcex-person-container, #ctc-person-grid{
+						transition: all linear 250ms;
+					}
+					.ctcex-person-container.zoomout{
+						transform: scale(0.05);
+						opacity: 0;
+					}
+					.ctcex-person-container.zoomin{
+						transform: scale(1.0);
+						opacity: 1;
+					}
 				</style>
 				<div id="ctc-people-groups"></div>
 			</header><!-- .page-header -->
 
 			<?php /* Start the Loop */ ?>
-			<div class="flex-container">
+			<div>
+			<div id="ctc-people-grid" class="flex-container">
 			<?php while ( have_posts() ) : the_post(); ?>
 			
 				<!-- Person details -->
@@ -70,37 +82,47 @@ get_header(); ?>
 
 			<?php endwhile; ?>
 			</div>
+			</div>
+
 			<?php the_posts_navigation(); ?>
 			<script>
 				jQuery( document ).ready( function( $ ){
 					var items = $( '.ctcex-person-container' );
-					var groups = [];
+					var group_slugs = [];
+					var group_names = [];
 					items.each( function( i, el ){
 						if( $(el).data('groups') ) {
-							var mgroups = $(el).data('groups').split( '; ' );
-							$.merge( groups, mgroups );
+							var mgroup_names = $(el).data('group_names').split( '; ' );
+							var mgroup_slugs = $(el).data('groups').split( '; ' );
+							$.merge( group_names, mgroup_names );
+							$.merge( group_slugs, mgroup_slugs );
 						}
 					} );
 					
 					var uniqueGroups = [];
-					$.each(groups, function(i, el){
+					var uniqueGroupSlugs = [];
+					$.each(group_names, function(i, el){
 						if($.inArray(el, uniqueGroups) === -1) uniqueGroups.push(el);
+						if($.inArray(group_slugs[i], uniqueGroupSlugs) === -1) uniqueGroupSlugs.push(group_slugs[i]);
 					});
-					uniqueGroups.sort();
+					// uniqueGroups.sort();
+					// uniqueGroupSlugs.sort();
 					
 					$.each( uniqueGroups, function( i, el ){
 						var grp = $('<div class="pill button"><span>' + el + '</span></div>');
 						grp.click( function() {
 							if( $(this).hasClass('active') ) {
 								$(this).removeClass('active');
-								$( '.ctcex-person-container' ).fadeIn(500);
+								$( '.ctcex-person-container' ).addClass('zoomin' ).delay(250).queue( function(){$(this).fadeIn( 250 ).dequeue();});
+							//.delay(250).queue(function(){$(this).addClass('shown').dequeue();});
 							} else {
 								$(this).siblings().removeClass('active');
 								$(this).addClass('active');
-								$( '.ctcex-person-container:not([data-groups *= "' + el + '"])' ).fadeOut(250);
-								$( '.ctcex-person-container[data-groups *= "' + el + '"]' ).fadeIn(500);
+								$( '.ctcex-person-container:not([data-groups *= "' + uniqueGroupSlugs[i] + '"])' ).addClass('zoomout' ).delay(250).queue( function(){$(this).fadeOut( 250 ).dequeue();});
+								$( '.ctcex-person-container[data-groups *= "' + uniqueGroupSlugs[i] + '"]' ).addClass('zoomin' ).delay(250).queue( function(){$(this).fadeIn( 250 ).dequeue();});
+								//.removeClass('hidden');
 							}
-						})
+						});
 						$( '#ctc-people-groups' ).append( grp );
 					} );
 					

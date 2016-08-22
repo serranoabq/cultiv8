@@ -437,7 +437,7 @@ function cultiv8_the_person_details( $post_id, $glyph = 'fa' ){
 	$position_src = $data[ 'position' ] ? sprintf( '<h3 class="%s">%s</h3>', $classes[ 'position' ], $data[ 'position' ] ) : '';
 				
 	// Get image
-	$img_src = $data[ 'img' ] ? sprintf( '<img class="%s" src="%s" alt="%s"  width="300" height="300"/>', $classes[ 'img' ], $data[ 'img' ], $title ) : '';
+	$img_src = $data[ 'img' ] ? sprintf( '<img class="%s" src="%s" alt="%s" width="300" height="300"/>', $classes[ 'img' ], $data[ 'img' ], $title ) : '';
 
 	$names = cultiv8_get_option( 'ctc-people', __( 'people/person', 'cultiv8' ) );
 	$plural_name = explode( '/', strtolower( $names ) );
@@ -552,3 +552,4 @@ function cultiv8_the_location_details( $post_id, $glyph = 'fa' ){
 	echo $item_output;
 }
 
+>>>>>>> origin/master
