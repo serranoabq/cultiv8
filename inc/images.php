@@ -86,7 +86,7 @@ function cultiv8_the_site_logo() {
 	if( $url ) {
 		// Output image HTML
 		$html = sprintf( '<a href="%1$s" class="site-logo-link" rel="home" itemprop="url">' . 
-			'<img src="%2$s" class="site-logo attachment-pique-logo" itemprop="logo" data-size="pique-logo"/></a>',
+			'<img src="%2$s" class="site-logo attachment-pique-logo" itemprop="logo" data-size="pique-logo" width="100" height="100"/></a>',
 			esc_url( home_url( '/' ) ),
 			$url 
 		);
@@ -97,7 +97,7 @@ function cultiv8_the_site_logo() {
 		// Generate placeholder  for the customizer
 		if( is_a( $wp_customize, 'WP_Customize_Manager' ) && $wp_customize->is_preview() ) {
 			$html = sprintf( '<a href="%1$s" class="site-logo-link" style="display:none">' . '
-				<img class="site-logo attachment-pique-logo" data-size="pique-logo "/></a>',
+				<img class="site-logo attachment-pique-logo" data-size="pique-logo"  width="100" height="100"/></a>',
 				esc_url( home_url( '/' ) )
 			);
 			echo $html;

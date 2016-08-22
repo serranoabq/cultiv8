@@ -34,7 +34,7 @@ $ctc_people = new WP_Query( $query );
 						the_post_thumbnail( 'pique-square', array( 'class' => 'ctc-person-img' ) );
 					else:
 				?>
-					<img class="ctc-person-img" src="<?php echo $data[ 'img' ]; ?>"/>
+					<img class="ctc-person-img" src="<?php echo $data[ 'img' ]; ?>" width="100" height="100" />
 				<?php endif; ?>
 				
 				</div>

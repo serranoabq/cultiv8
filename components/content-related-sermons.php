@@ -57,7 +57,7 @@
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 			<?php if ( $img ) : ?>
-				<img class="ctc-sermon-img" src="<?php echo $img; ?>"/>
+				<img class="ctc-sermon-img" src="<?php echo $img; ?>" width="320" height="180" />
 			<?php endif; ?>
 
 			<a href="<?php echo $permalink; ?>"><?php the_title( '<h3>' , '</h3>' ); ?></a>

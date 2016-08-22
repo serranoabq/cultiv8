@@ -268,7 +268,7 @@ function cultiv8_the_event_details( $post_id, $glyph = 'fa' ){
 	// Get image
 	$img_src = $data[ 'img' ] ? sprintf( 
 		'%s
-			<img class="%s" src="%s" alt="%s"/>
+			<img class="%s" src="%s" alt="%s" width="960" height="540"/>
 		%s', 
 		$data[ 'map_used' ] ? '<a href="' . $data[ 'map_url' ] . '" target="_blank">' : '',
 		$classes[ 'img' ], 
@@ -372,7 +372,7 @@ function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
 		$video_src ) : '' ;
 		
 	// Get image
-	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';
+	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s" width="960" height="540"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';
 	$video_src = $img_overlay_class ? $img_src : $video_src;
 	
 	$img_video_output = $video_src ? $video_src : $img_src . $audio_src;
@@ -437,7 +437,7 @@ function cultiv8_the_person_details( $post_id, $glyph = 'fa' ){
 	$position_src = $data[ 'position' ] ? sprintf( '<h3 class="%s">%s</h3>', $classes[ 'position' ], $data[ 'position' ] ) : '';
 				
 	// Get image
-	$img_src = $data[ 'img' ] ? sprintf( '<img class="%s" src="%s" alt="%s"/>', $classes[ 'img' ], $data[ 'img' ], $title ) : '';
+	$img_src = $data[ 'img' ] ? sprintf( '<img class="%s" src="%s" alt="%s"  width="300" height="300"/>', $classes[ 'img' ], $data[ 'img' ], $title ) : '';
 
 	$names = cultiv8_get_option( 'ctc-people', __( 'people/person', 'cultiv8' ) );
 	$plural_name = explode( '/', strtolower( $names ) );
@@ -516,7 +516,7 @@ function cultiv8_the_location_details( $post_id, $glyph = 'fa' ){
 	$img_src = $data[ 'slider' ] ? do_shortcode( $data[ 'slider' ] ) : ''; 
 	$img_src = !$img_src ? sprintf( 
 		'%s
-			<img class="%s" src="%s" alt="%s"/>
+			<img class="%s" src="%s" alt="%s" width="960" height="540"/>
 		%s', 
 		$data[ 'map_used' ] ? '<a href="' . $data[ 'map_url' ] . '" target="_blank">' : '',
 		$classes[ 'img' ], 

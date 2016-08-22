@@ -22,7 +22,7 @@
 	}
 	
 	$img_src = $data[ 'img' ] ? sprintf( '<div class="cultiv8-fixedratio cultiv8-square">
-		<div class="cultiv8-fixedratio-content cultiv8-circle"><img class="ctcex-person-img" src="%s" alt="%s"/></div></div>', $data[ 'img' ], $title ) : '';
+		<div class="cultiv8-fixedratio-content cultiv8-circle"><img class="ctcex-person-img" src="%s" alt="%s" width="960" height="540"/></div></div>', $data[ 'img' ], $title ) : '';
 	
 	$position_src = $data[ 'position' ] ? sprintf( '<h3 class="ctcex-person-position textcenter normfont flush-bottom">%s</h3>', $data[ 'position' ] ) : '';
 	

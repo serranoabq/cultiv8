@@ -34,7 +34,7 @@
 				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) ); 
 			else : // Otherwise, let's just show the header image
 			?>
-				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); ?>">
+				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); width="200" height="100" ?>">
 			<?php endif; // End featured image check. ?>
 			</a>
 		<?php endif; // End header image check. ?>
