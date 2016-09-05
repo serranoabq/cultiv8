@@ -131,6 +131,17 @@ function cultiv8_rss_title( $title, $dep ){
 	return $title;
 }
 
+// Use the sermon speaker as the post author in RSS feed
+add_filter( 'the_author', 'cultiv8_rss_author', 10 );
+function cultiv8_rss_author( $name ){
+	if( is_feed() ){
+		global $post;
+		$data = cultiv8_get_sermon_data( $post->ID );
+		if( $data[ 'speakers' ] ) 
+			$name = $data[ 'speakers' ];
+	}
+	return $name;
+}
 
 /* 
 	CTC uses the WP function do_enclose to make proper enclosures for the audio in a post. That method does an http fetch to

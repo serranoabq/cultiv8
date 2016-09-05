@@ -372,7 +372,7 @@ function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
 		$video_src ) : '' ;
 		
 	// Get image
-	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s" width="960" height="540"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';
+	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s" width="960"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';
 	$video_src = $img_overlay_class ? $img_src : $video_src;
 	
 	$img_video_output = $video_src ? $video_src : $img_src . $audio_src;
@@ -551,5 +551,3 @@ function cultiv8_the_location_details( $post_id, $glyph = 'fa' ){
 	
 	echo $item_output;
 }
-
->>>>>>> origin/master
