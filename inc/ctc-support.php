@@ -364,12 +364,15 @@ function cultiv8_the_sermon_details( $post_id, $glyph = 'fa' ){
 					$( this ).hide();
 					$( ".ctcex-sermon-img" ).fadeOut( 200, function() {
 						$( this ).replaceWith( vid_src );
+						$( ".%s").addClass( "video_loaded" );
 					});
 				} );
 			})
 		</script>', 
 		$classes[ 'media' ],
-		$video_src ) : '' ;
+		$video_src, 
+		$classes[ 'media' ]
+		) : '' ;
 		
 	// Get image
 	$img_src = $data[ 'img' ] ? sprintf( '%s<img class="%s" src="%s" alt="%s" width="960"/>', $img_overlay_js, $classes[ 'img' ], $data[ 'img' ], get_the_title() ) : '';

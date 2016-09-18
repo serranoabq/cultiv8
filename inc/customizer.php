@@ -73,7 +73,61 @@ function cultiv8_customize_register( $wp_customize ) {
 	) );
 	
 	// Panel options
-	for($i = 1; $i <= 8; $i++ ){
+	$panels = 12;
+	// New panels
+	for($i = 9; $i <= $panels; $i++ ){
+		$wp_customize->add_section( 'pique_panel' . $i, array(
+			'title'           => esc_html__( 'Panel ' . $i, 'pique' ),
+			'active_callback' => 'is_front_page',
+			'panel'           => 'pique_options_panel',
+			'description'     => __( 'Add a background image to your panel by setting a featured image in the page editor. If you don&rsquo;t select a page, this panel will not be displayed.', 'pique' ),
+		) );
+
+		$wp_customize->add_setting( 'pique_panel' . $i, array(
+			'default'           => false,
+			'sanitize_callback' => 'pique_sanitize_numeric_value',
+		) );
+
+		$wp_customize->add_control( 'pique_panel' . $i, array(
+			'label'   => esc_html__( 'Panel Content', 'pique' ),
+			'section' => 'pique_panel' . $i,
+			'type'    => 'dropdown-pages',
+		) );
+
+		$wp_customize->add_setting( 'pique_panel' . $i . '_background', array(
+			'default'           => 'default',
+			'sanitize_callback' => 'sanitize_hex_color',
+			'transport'         => 'postMessage',
+		) );
+
+		$wp_customize->add_control( 'pique_panel' . $i . '_background', array(
+			'label'   => esc_html__( 'Background Color', 'pique' ),
+			'section' => 'pique_panel' . $i,
+			'type'    => 'color',
+		) );
+
+		$wp_customize->add_setting( 'pique_panel' . $i . '_opacity', array(
+			'default'           => 'default',
+			'sanitize_callback' => 'pique_sanitize_opacity',
+			'transport'         => 'postMessage',
+		) );
+
+		$wp_customize->add_control( 'pique_panel' . $i . '_opacity', array(
+			'label'       => esc_html__( 'Featured Image Opacity', 'pique' ),
+			'section'     => 'pique_panel' . $i,
+			'type'        => 'select',
+			'description' => esc_html( 'Set the opacity of the featured image over the panel background.', 'pique' ),
+			'choices'     => array(
+				'0.25' => esc_html__( '25%', 'pique' ),
+				'0.5'  => esc_html__( '50%', 'pique' ),
+				'0.75' => esc_html__( '75%', 'pique' ),
+				'1'    => esc_html__( '100%', 'pique' ),
+
+			),
+		) );	
+	}
+	
+	for($i = 1; $i <= $panels; $i++ ){
 		cultiv8_customize_createSetting( $wp_customize, array(
 			'id' => 'cultiv8_panel'. $i .'_hidetitle',
 			'label' => _x( 'Hide Title', 'Customizer setting', 'cultiv8' ),
@@ -81,7 +135,7 @@ function cultiv8_customize_register( $wp_customize ) {
 			'default' => false,
 			'section' => 'pique_panel' . $i,
 			'transport' => 'postMessage',
-			'description' => _x( 'Check to hide the title in this section', 'cultiv8' ),
+			'description' => __( 'Check to hide the title in this section', 'cultiv8' ),
 		) );
 		cultiv8_customize_createSetting( $wp_customize, array(
 			'id' => 'cultiv8_panel' . $i. '_height',
@@ -90,7 +144,7 @@ function cultiv8_customize_register( $wp_customize ) {
 			'default' => false,
 			'section' => 'pique_panel' . $i,
 			'transport' => 'postMessage',
-			'description' => _x( 'Check to adjust panel height to content', 'cultiv8' ),
+			'description' => __( 'Check to adjust panel height to content', 'cultiv8' ),
 		) );
 		cultiv8_customize_createSetting( $wp_customize, array(
 			'id' => 'cultiv8_panel' . $i. '_hideinmenu',
@@ -99,7 +153,7 @@ function cultiv8_customize_register( $wp_customize ) {
 			'default' => false,
 			'section' => 'pique_panel' . $i,
 			//'transport' => 'postMessage',
-			'description' => _x( 'Check to hide this pane from the top menu if the <code>Add an anchor menu to the front page</code> option is selected.', 'cultiv8' ),
+			'description' => __( 'Check to hide this pane from the top menu if the <code>Add an anchor menu to the front page</code> option is selected.', 'cultiv8' ),
 		) );
 	}
 }
@@ -111,6 +165,7 @@ function cultiv8_customize_preview_js() {
 	wp_enqueue_script( 'cultiv8_customizer', get_stylesheet_directory_uri() . '/assets/js/customizer.js', array( 'customize-preview' ), '20160111', true );
 }
 add_action( 'customize_preview_init', 'cultiv8_customize_preview_js' );
+
 
 // Some Customizer shortcuts
 function cultiv8_customize_createSetting( $wp_customize, $args ) {
@@ -221,3 +276,31 @@ function cultiv8_customize_createPanel( $wp_customize, $args ) {
 	unset( $args[ 'id' ] );
 	$wp_customize->add_panel( $id, $args );
 }
+
+/*
+ * Output our custom CSS to change background colour/opacity of panels.
+ * Note: not very pretty, but it works.
+ */
+function cultiv8_customizer_css() {
+	?>
+	<style type="text/css">
+	<?php
+	// Get each panel and iterate to output the proper CSS styles
+	foreach ( range( 9, 12 ) as $panel ) :
+		// Adjust the background colour if a custom colour is set
+		if ( get_theme_mod( 'pique_panel' . $panel . '_background' ) ) : ?>
+			.pique-frontpage .pique-panel.pique-panel<?php echo absint( $panel ); ?> {
+				background-color:  <?php echo esc_attr( get_theme_mod( 'pique_panel' . $panel . '_background' ) ); ?>;
+			}
+		<?php endif;
+		// Adjust the opacity of featured image if set
+		if ( get_theme_mod( 'pique_panel' . $panel . '_opacity' ) ) : ?>
+			.pique-frontpage .pique-panel.pique-panel<?php echo absint( $panel ); ?> .pique-panel-background {
+				opacity:  <?php echo esc_attr( get_theme_mod( 'pique_panel' . $panel . '_opacity' ) ); ?>;
+			}
+		<?php endif;
+	endforeach; ?>
+	</style>
+	<?php
+}
+add_action( 'wp_head', 'cultiv8_customizer_css' );

@@ -34,7 +34,7 @@
 				the_post_thumbnail( 'pique-header', array( 'id' => 'pique-header-image' ) ); 
 			else : // Otherwise, let's just show the header image
 			?>
-				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); width="200" height="100" ?>">
+				<img id="pique-header-image" src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php bloginfo( 'name' ); ?>">
 			<?php endif; // End featured image check. ?>
 			</a>
 		<?php endif; // End header image check. ?>
@@ -49,7 +49,7 @@
 		<?php if ( pique_is_frontpage() AND get_theme_mod( 'pique_menu' ) ) : ?>
 			<?php
 			// Get each of our panels and output a link to that section ID on the page
-			foreach ( range( 1, 8 ) as $panel ) :
+			foreach ( range( 1, 12 ) as $panel ) :
 				if ( get_theme_mod( 'pique_panel' . $panel ) ) :
 					$post = get_post( get_theme_mod( 'pique_panel' . $panel ) );
 					setup_postdata( $post );
